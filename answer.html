@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Answer 💬</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .answer-title {
+            font-size: clamp(1.7rem, 5vw, 2.8rem);
+            color: var(--blush);
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .answer-sub {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            color: var(--gold-light);
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        /* ——— Toggle ——— */
+        .answer-toggle {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .toggle-btn {
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            border: 1px solid rgba(253, 164, 175, 0.3);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            transition: all 0.25s;
+        }
+
+        .toggle-btn.selected-yes {
+            background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.4);
+        }
+
+        .toggle-btn.selected-no {
+            background: rgba(100, 100, 100, 0.25);
+            color: #aaa;
+            border-color: rgba(150, 150, 150, 0.3);
+        }
+
+        /* ——— Form ——— */
+        .form-group {
+            margin-bottom: 1.4rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(253, 164, 175, 0.25);
+            border-radius: 0.8rem;
+            padding: 0.85rem 1.1rem;
+            color: var(--text-light);
+            font-family: 'Lato', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            resize: vertical;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--rose-light);
+            box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: rgba(253, 164, 175, 0.35);
+        }
+
+        select option {
+            background: #3a0018;
+            color: var(--text-light);
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        /* ——— Mood selector ——— */
+        .mood-row {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .mood-chip {
+            padding: 0.4rem 0.9rem;
+            border-radius: 50px;
+            border: 1px solid rgba(253, 164, 175, 0.2);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+
+        .mood-chip.active {
+            background: rgba(244, 63, 94, 0.2);
+            border-color: var(--rose);
+            color: var(--blush);
+        }
+
+        /* ——— Char count ——— */
+        .char-count {
+            text-align: right;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            opacity: 0.5;
+            margin-top: 0.3rem;
+        }
+
+        /* ——— Submit ——— */
+        .submit-row {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        /* ——— Reaction section (shows after yes/no pick) ——— */
+        #reaction-msg {
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            color: var(--gold-light);
+            margin-bottom: 1rem;
+            min-height: 2em;
+            transition: opacity 0.4s;
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+
+    <div class="page" style="padding-top:3rem; padding-bottom:3rem;">
+        <div class="glass-card fade-in" style="max-width:620px;">
+            <h1 class="answer-title glow">Your Turn 💬</h1>
+            <p class="answer-sub">This space is yours — be honest, be you.</p>
+
+            <div class="divider">✨</div>
+
+            <!-- Step 1: Pick answer -->
+            <div class="form-group">
+                <label>First — what's your answer?</label>
+                <div class="answer-toggle">
+                    <button class="toggle-btn" id="btn-yes" onclick="pickAnswer('yes')">💖 Yes!</button>
+                    <button class="toggle-btn" id="btn-no" onclick="pickAnswer('no')">💔 No…</button>
+                </div>
+                <p id="reaction-msg"></p>
+            </div>
+
+            <!-- The form -->
+            <form id="answer-form" onsubmit="submitAnswer(event)">
+                <div class="form-group">
+                    <label>Your name (so I remember this forever)</label>
+                    <input type="text" id="name" placeholder="e.g. Amara" maxlength="50" required />
+                </div>
+
+                <div class="form-group">
+                    <label>How are you feeling right now? 🌡️</label>
+                    <div class="mood-row" id="mood-row">
+                        <button type="button" class="mood-chip" onclick="toggleMood(this)">😊 Happy</button>
+                        <button type="button" class="mood-chip" onclick="toggleMood(this)">🥺 Touched</button>
+                        <button type="button" class="mood-chip" onclick="toggleMood(this)">😍 Excited</button>
+                        <button type="button" class="mood-chip" onclick="toggleMood(this)">🤭 Shy</button>
+                        <button type="button" class="mood-chip" onclick="toggleMood(this)">😂 Amused</button>
+                        <button type="button" class="mood-chip" onclick="toggleMood(this)">😌 Safe</button>
+                        <button type="button" class="mood-chip" onclick="toggleMood(this)">💭 Thinking</button>
+                        <button type="button" class="mood-chip" onclick="toggleMood(this)">🥰 Loved</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred form of gesture? 🎁</label>
+                    <select id="gesture-type" onchange="checkOtherGesture()">
+                        <option value="Flowers">🌸 Flowers</option>
+                        <option value="Jewellery">💎 Jewellery</option>
+                        <option value="Dinner Date">🍷 Romantic Dinner</option>
+                        <option value="Travel">✈️ Travel / Adventure</option>
+                        <option value="Handmade">🎨 Something Handmade</option>
+                        <option value="Other">✨ Other...</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="other-gesture-wrap" style="display:none;">
+                    <label>Tell me more about what you'd love...</label>
+                    <input type="text" id="gesture-details" placeholder="Describe your dream gesture..."
+                        maxlength="100" />
+                </div>
+
+                <div class="form-group">
+                    <label>Your reasons (in your own words)</label>
+                    <textarea id="reasons"
+                        placeholder="Tell me everything — why yes or why no, what you're feeling, what you want me to know…"
+                        maxlength="800" oninput="updateCount()"></textarea>
+                    <p class="char-count"><span id="char-count">0</span> / 800</p>
+                </div>
+
+                <div class="form-group">
+                    <label>One word to describe this moment</label>
+                    <input type="text" id="word" placeholder="e.g. Unexpected, Magical, Scary-good…" maxlength="30" />
+                </div>
+
+                <div class="form-group">
+                    <label>A song that fits this feeling 🎵</label>
+                    <input type="text" id="song" placeholder="Artist — Song title" maxlength="80" />
+                </div>
+
+                <div class="submit-row">
+                    <button type="submit" class="btn btn-gold" style="font-size:1.05rem; padding:0.85rem 2.5rem;">
+                        Send My Answer 💌
+                    </button>
+                </div>
+            </form>
+
+            <div class="nav-dots" style="margin-top:2rem;">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span class="active"></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        let chosenAnswer = null;
+
+        const yesReactions = [
+            "💖 My heart just did a little dance!",
+            "🌸 I can't stop smiling reading that…",
+            "🥺 This is the best thing I've ever seen.",
+            "✨ Now tell me everything!",
+        ];
+
+        const noReactions = [
+            "💙 Thank you for being honest with me.",
+            "🌿 Your honesty means a lot. Tell me more.",
+            "🤍 I respect whatever you feel.",
+        ];
+
+        function pickAnswer(val) {
+            chosenAnswer = val;
+            const yBtn = document.getElementById('btn-yes');
+            const nBtn = document.getElementById('btn-no');
+            const reaction = document.getElementById('reaction-msg');
+
+            yBtn.className = 'toggle-btn' + (val === 'yes' ? ' selected-yes' : '');
+            nBtn.className = 'toggle-btn' + (val === 'no' ? ' selected-no' : '');
+
+            const phrases = val === 'yes' ? yesReactions : noReactions;
+            reaction.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+            reaction.style.opacity = '1';
+
+            if (val === 'yes') {
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        const h = document.createElement('span');
+                        h.style.cssText = `
+              position:fixed; font-size:${1.2 + Math.random() * 1.5}rem;
+              left:${Math.random() * 100}vw; top:${Math.random() * 100}vh;
+              animation:sparkle-pop 0.8s ease forwards;
+              pointer-events:none; z-index:9999;
+            `;
+                        h.textContent = ['💕', '💖', '❤️', '🌸', '✨'][Math.floor(Math.random() * 5)];
+                        document.body.appendChild(h);
+                        setTimeout(() => h.remove(), 1000);
+                    }, i * 80);
+                }
+            }
+        }
+
+        function checkOtherGesture() {
+            const val = document.getElementById('gesture-type').value;
+            document.getElementById('other-gesture-wrap').style.display = (val === 'Other' || val === 'Jewellery' || val === 'Flowers') ? 'block' : 'none';
+        }
+
+        function toggleMood(el) {
+            el.classList.toggle('active');
+        }
+
+        function updateCount() {
+            const ta = document.getElementById('reasons');
+            document.getElementById('char-count').textContent = ta.value.length;
+        }
+
+        async function submitAnswer(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const reasons = document.getElementById('reasons').value.trim();
+            const word = document.getElementById('word').value.trim();
+            const song = document.getElementById('song').value.trim();
+            const gesture = document.getElementById('gesture-type').value;
+            const gestureDetails = document.getElementById('gesture-details').value.trim();
+            const moods = [...document.querySelectorAll('.mood-chip.active')].map(el => el.textContent).join(', ');
+            const answer = chosenAnswer === 'yes' ? '💖 YES!' : '💔 No';
+
+            // Save to localStorage (for celebration page)
+            localStorage.setItem('proposal_answer', JSON.stringify({
+                answer: chosenAnswer,
+                name, reasons, word, song, moods, gesture, gestureDetails,
+                timestamp: new Date().toISOString()
+            }));
+
+            // Send to your email via Web3Forms
+            try {
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.textContent = 'Sending… 💫';
+                submitBtn.disabled = true;
+
+                await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        access_key: '6ee33638-8873-4ba8-8f74-c388b396f3b3',
+                        subject: `💌 Girlfriend Proposal Response from ${name}!`,
+                        from_name: 'Girlfriend Proposal 💕',
+                        'Her Name': name,
+                        'Her Answer': answer,
+                        'Moods': moods || 'Not selected',
+                        'Preferred Gesture': gesture + (gestureDetails ? ` (${gestureDetails})` : ''),
+                        'Her Reasons': reasons || 'Not provided',
+                        'One Word': word || 'Not provided',
+                        'Song': song || 'Not provided',
+                        'Timestamp': new Date().toLocaleString()
+                    })
+                });
+            } catch (err) {
+                // Still redirect even if email fails
+                console.log('Email send error:', err);
+            }
+
+            window.location.href = 'celebrate.html';
+        }
+    </script>
+</body>
+
+</html>
