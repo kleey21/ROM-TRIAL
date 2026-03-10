@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Big Question 💍</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .question-title {
+            font-size: clamp(1.6rem, 5vw, 2.8rem);
+            color: var(--blush);
+            text-align: center;
+            margin-bottom: 0.4rem;
+            line-height: 1.3;
+        }
+
+        .question-sub {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            color: var(--gold-light);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .big-question {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 4.5vw, 2.5rem);
+            text-align: center;
+            color: #fff;
+            margin: 1.5rem 0;
+            line-height: 1.4;
+            text-shadow: 0 0 30px rgba(244, 63, 94, 0.5);
+        }
+
+        .big-question span {
+            color: var(--rose-light);
+            display: inline-block;
+            animation: heartbeat 1.4s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            14% {
+                transform: scale(1.15);
+            }
+
+            28% {
+                transform: scale(1);
+            }
+
+            42% {
+                transform: scale(1.08);
+            }
+        }
+
+        .ring-emoji {
+            font-size: 4rem;
+            display: block;
+            text-align: center;
+            margin: 1rem 0;
+            animation: ring-spin 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.7));
+        }
+
+        @keyframes ring-spin {
+
+            0%,
+            100% {
+                transform: rotate(-8deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(8deg) scale(1.12);
+            }
+        }
+
+        /* ——— Yes / No Buttons ——— */
+        .answer-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            min-height: 80px;
+        }
+
+        #yes-btn {
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: 'Lato', sans-serif;
+            font-weight: 700;
+            box-shadow: 0 4px 24px rgba(244, 63, 94, 0.5);
+            transition: all 0.25s;
+            animation: yes-pulse 2s ease-in-out infinite;
+        }
+
+        #yes-btn:hover {
+            transform: scale(1.1) translateY(-4px);
+            box-shadow: 0 12px 40px rgba(244, 63, 94, 0.7);
+        }
+
+        @keyframes yes-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 24px rgba(244, 63, 94, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 4px 40px rgba(244, 63, 94, 0.8);
+            }
+        }
+
+        #no-btn {
+            font-size: 0.9rem;
+            padding: 0.7rem 2rem;
+            border-radius: 50px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid rgba(253, 164, 175, 0.25);
+            cursor: pointer;
+            font-family: 'Lato', sans-serif;
+            position: absolute;
+            transition: all 0.15s;
+            opacity: 0.6;
+        }
+
+        .no-wrapper {
+            position: relative;
+            width: 140px;
+            height: 50px;
+        }
+
+        .no-caption {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 0.4rem;
+            opacity: 0.5;
+            font-style: italic;
+            min-height: 1.2em;
+            transition: opacity 0.3s;
+        }
+
+        /* ——— Teasing message ——— */
+        #tease-msg {
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.15rem;
+            color: var(--gold-light);
+            min-height: 2em;
+            margin-top: 1rem;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        /* ——— Decorative quote ——— */
+        .love-quote {
+            background: rgba(244, 63, 94, 0.07);
+            border-left: 3px solid var(--rose);
+            border-radius: 0 0.8rem 0.8rem 0;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+
+    <div class="page">
+        <div class="glass-card fade-in">
+            <h1 class="question-title glow">Okay. I've said my reasons.</h1>
+            <p class="question-sub">Now there's just one thing left to ask…</p>
+
+            <div class="divider">💕</div>
+
+            <blockquote class="love-quote">
+                "I'm not looking for perfect. I'm looking for real. And with you, every real
+                moment feels more precious than anything I could have imagined."
+            </blockquote>
+
+            <span class="ring-emoji">💍</span>
+
+            <p class="big-question">
+                Will you be<br>
+                <span>my girlfriend?</span>
+            </p>
+
+            <div class="answer-area">
+                <button id="yes-btn" onclick="yesClicked()">💖 Yes!</button>
+
+                <div>
+                    <div class="no-wrapper">
+                        <button id="no-btn" onmousemove="runAway(event)" onclick="noClicked()">Nope 😢</button>
+                    </div>
+                    <p class="no-caption" id="no-caption"></p>
+                </div>
+            </div>
+
+            <p id="tease-msg"></p>
+
+            <div class="nav-dots" style="margin-top:2rem;">
+                <span></span>
+                <span></span>
+                <span class="active"></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        const noBtn = document.getElementById('no-btn');
+        const teaseMsg = document.getElementById('tease-msg');
+        const caption = document.getElementById('no-caption');
+        let escapedCount = 0;
+
+        const teasePhrases = [
+            "Think again! 😤",
+            "It keeps running… 🤣",
+            "You can't click what doesn't want to be clicked! 😂",
+            "Maybe just press YES? 🥺",
+            "It REALLY doesn't want to be clicked 😅",
+            "Persistence won't work here! 💨",
+            "Physics says no 🚀",
+            "*nervous laughter* just go with YES 🙈",
+        ];
+
+        function runAway(e) {
+            const btn = noBtn;
+            const wrapper = btn.parentElement;
+            const wRect = document.body.getBoundingClientRect();
+
+            let newX, newY;
+            let attempts = 0;
+
+            do {
+                newX = Math.random() * (wRect.width - 150);
+                newY = Math.random() * (wRect.height - 60);
+                attempts++;
+            } while (attempts < 30);
+
+            btn.style.position = 'fixed';
+            btn.style.left = newX + 'px';
+            btn.style.top = newY + 'px';
+            btn.style.zIndex = 9999;
+
+            escapedCount++;
+            if (escapedCount <= teasePhrases.length) {
+                teaseMsg.textContent = teasePhrases[escapedCount - 1];
+                teaseMsg.style.opacity = '1';
+            }
+            if (escapedCount === 3) {
+                caption.textContent = '(it keeps running away! 🏃)';
+                caption.style.opacity = '0.7';
+            }
+        }
+
+        function noClicked() {
+            teaseMsg.textContent = "Lmao nice try 😂 The button trolled you!";
+            teaseMsg.style.opacity = '1';
+        }
+
+        function yesClicked() {
+            // Burst of hearts!
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const h = document.createElement('span');
+                    h.style.cssText = `
+            position:fixed;
+            font-size:${1 + Math.random() * 2}rem;
+            left:${Math.random() * 100}vw;
+            top:${Math.random() * 100}vh;
+            animation:sparkle-pop 1s ease forwards;
+            pointer-events:none;
+            z-index:9999;
+          `;
+                    h.textContent = ['❤️', '💕', '💖', '💗', '🌸', '✨'][Math.floor(Math.random() * 6)];
+                    document.body.appendChild(h);
+                    setTimeout(() => h.remove(), 1200);
+                }, i * 60);
+            }
+            setTimeout(() => {
+                window.location.href = 'answer.html';
+            }, 1200);
+        }
+    </script>
+</body>
+
+</html>

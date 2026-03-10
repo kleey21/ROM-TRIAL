@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Why You? 🌸</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .story-title {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            color: var(--blush);
+            text-align: center;
+            margin-bottom: 0.4rem;
+        }
+
+        .story-sub {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            color: var(--gold-light);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* ——— Carousel ——— */
+        .carousel-track {
+            overflow: visible;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            animation: slide-in 0.5s ease both;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .reason-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(253, 164, 175, 0.2);
+            border-radius: 1.2rem;
+            padding: 1.8rem;
+            display: flex;
+            gap: 1.2rem;
+            align-items: flex-start;
+            margin-bottom: 1.2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .reason-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(244, 63, 94, 0.2);
+        }
+
+        .reason-icon {
+            font-size: 2.2rem;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.5));
+        }
+
+        .reason-text h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--rose-light);
+            margin-bottom: 0.4rem;
+        }
+
+        .reason-text p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ——— Carousel Controls ——— */
+        .carousel-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        .carousel-btn {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            color: var(--blush);
+            border-radius: 50px;
+            padding: 0.5rem 1.3rem;
+            cursor: pointer;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.25s;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(244, 63, 94, 0.3);
+            transform: scale(1.05);
+        }
+
+        .carousel-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* ——— Bottom CTA ——— */
+        .cta-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* ——— Progress bar ——— */
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(253, 164, 175, 0.15);
+            border-radius: 3px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--rose), var(--gold));
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+
+    <div class="page">
+        <div class="glass-card fade-in">
+            <h1 class="story-title glow">Why You?</h1>
+            <p class="story-sub">Let me count the reasons… 🌹</p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 20%"></div>
+            </div>
+
+            <div class="carousel-track">
+                <!-- Slide 1 -->
+                <div class="slide active" data-slide="0">
+                    <div class="reason-card">
+                        <span class="reason-icon">😊</span>
+                        <div class="reason-text">
+                            <h3>Your Smile Disarms Me</h3>
+                            <p>The way you smile — not just with your lips, but with your whole face —
+                                it has this magical way of making every problem feel smaller. I could
+                                exist in that smile forever.</p>
+                        </div>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-icon">💬</span>
+                        <div class="reason-text">
+                            <h3>You Actually Listen</h3>
+                            <p>In a world where everyone is waiting for their turn to talk, you
+                                genuinely listen. You remember the little things, and that tells me
+                                everything about your heart.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="slide" data-slide="1">
+                    <div class="reason-card">
+                        <span class="reason-icon">🔥</span>
+                        <div class="reason-text">
+                            <h3>Your Passion Inspires Me</h3>
+                            <p>When you talk about the things you love, your eyes light up differently.
+                                Watching you be passionate about life makes me want to be a better,
+                                more curious version of myself.</p>
+                        </div>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-icon">🌙</span>
+                        <div class="reason-text">
+                            <h3>You're My Safe Place</h3>
+                            <p>On the hardest days, even a simple message from you feels like coming
+                                home. You have a calm, grounding energy that I never knew I needed
+                                until you were there.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="slide" data-slide="2">
+                    <div class="reason-card">
+                        <span class="reason-icon">😂</span>
+                        <div class="reason-text">
+                            <h3>You Make Me Laugh — Really Laugh</h3>
+                            <p>Not just polite laughs. The kind where I'm wheezing and my stomach hurts.
+                                Life with you is never dull, and I think that's one of the greatest
+                                gifts you could give someone.</p>
+                        </div>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-icon">🏔️</span>
+                        <div class="reason-text">
+                            <h3>Your Strength Is Quiet & Extraordinary</h3>
+                            <p>You carry yourself through difficult moments with a kind of grace that
+                                most people struggle their whole lives to find. You're tougher than you
+                                know.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="slide" data-slide="3">
+                    <div class="reason-card">
+                        <span class="reason-icon">🌻</span>
+                        <div class="reason-text">
+                            <h3>You See the Good in Everyone</h3>
+                            <p>Your kindness isn't performed — it's instinctive. The way you treat
+                                people, all people, with warmth and respect is something truly rare
+                                and genuinely beautiful.</p>
+                        </div>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-icon">⭐</span>
+                        <div class="reason-text">
+                            <h3>You're Unlike Anyone I've Ever Met</h3>
+                            <p>I've searched for the right words to describe what makes you special,
+                                but I keep coming up short. Maybe that's the point — you're simply
+                                <em>you</em>, and that's more than enough.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5 -->
+                <div class="slide" data-slide="4">
+                    <div class="reason-card"
+                        style="border-color:rgba(245,158,11,0.4); background:rgba(245,158,11,0.07);">
+                        <span class="reason-icon">🌍</span>
+                        <div class="reason-text">
+                            <h3>You Make My World Bigger</h3>
+                            <p>Since you came into my life, colours feel brighter, music sounds better,
+                                and ordinary days feel like they might turn into something worth remembering.
+                                That's not nothing — that's everything.</p>
+                        </div>
+                    </div>
+                    <p
+                        style="text-align:center; font-family:'Dancing Script',cursive; font-size:1.2rem; color:var(--gold-light); padding: 0.5rem 0;">
+                        …and so many more reasons I'd need a whole book. 📖
+                    </p>
+
+                    <div class="cta-row">
+                        <a href="question.html" class="btn btn-primary">Now for the question… 💌</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-controls">
+                <button class="carousel-btn" id="prev-btn" onclick="changeSlide(-1)" disabled>← Prev</button>
+                <span class="slide-counter" id="slide-counter">1 / 5</span>
+                <button class="carousel-btn" id="next-btn" onclick="changeSlide(1)">Next →</button>
+            </div>
+
+            <div class="nav-dots" style="margin-top:1.5rem;">
+                <span></span>
+                <span class="active"></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        const total = slides.length;
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const counter = document.getElementById('slide-counter');
+        const progress = document.getElementById('progress');
+
+        function changeSlide(dir) {
+            slides[current].classList.remove('active');
+            current = Math.max(0, Math.min(total - 1, current + dir));
+            slides[current].classList.add('active');
+            prevBtn.disabled = current === 0;
+            nextBtn.disabled = current === total - 1;
+            counter.textContent = `${current + 1} / ${total}`;
+            progress.style.width = `${((current + 1) / total) * 100}%`;
+        }
+    </script>
+</body>
+
+</html>

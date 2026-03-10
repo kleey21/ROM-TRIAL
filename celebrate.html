@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎉 She Said…</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ——— Confetti canvas ——— */
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ——— Main Content ——— */
+        .celebrate-card {
+            position: relative;
+            z-index: 2;
+        }
+
+        .big-emoji {
+            font-size: 5rem;
+            display: block;
+            text-align: center;
+            animation: pop-in 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes pop-in {
+            0% {
+                transform: scale(0) rotate(-20deg);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.15) rotate(5deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+        }
+
+        .celebrate-title {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--blush), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .celebrate-sub {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            color: var(--gold-light);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* ——— Answer Display ——— */
+        .answer-display {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(253, 164, 175, 0.2);
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .answer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .answer-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            opacity: 0.6;
+            flex-shrink: 0;
+            min-width: 80px;
+        }
+
+        .answer-value {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-align: right;
+            flex: 1;
+        }
+
+        .answer-value.big-answer {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: var(--rose-light);
+            text-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
+            text-align: right;
+        }
+
+        .answer-value.reasons {
+            text-align: left;
+            font-style: italic;
+            color: var(--text-muted);
+            background: rgba(244, 63, 94, 0.06);
+            padding: 0.7rem 1rem;
+            border-radius: 0.6rem;
+            width: 100%;
+            margin-top: 0.3rem;
+        }
+
+        /* ——— Starry footer ——— */
+        .final-note {
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            opacity: 0.65;
+            padding-top: 1rem;
+        }
+
+        /* ——— Action buttons ——— */
+        .action-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        /* ——— Firework flashes ——— */
+        .firework {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50%;
+            animation: fw-burst 0.8s ease-out forwards;
+        }
+
+        @keyframes fw-burst {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* ——— Photo strip placeholder ——— */
+        .memory-strip {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+            margin: 1.2rem 0;
+        }
+
+        .memory-box {
+            width: 70px;
+            height: 70px;
+            border-radius: 0.6rem;
+            border: 1px dashed rgba(253, 164, 175, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* ——— Timestamp ——— */
+        .timestamp {
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            opacity: 0.4;
+            margin-top: 0.5rem;
+        }
+
+        /* ——— alternate sad state ——— */
+        .sad-overlay {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="page celebrate-card" style="padding-top:3rem; padding-bottom:3rem;">
+        <div class="glass-card fade-in" style="max-width:600px;" id="main-card">
+            <!-- Content filled by JS -->
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // ——— Load saved answer ———
+        const raw = localStorage.getItem('proposal_answer');
+        const data = raw ? JSON.parse(raw) : {
+            answer: 'yes', name: 'You', reasons: '', word: '', song: '', moods: '',
+            gesture: 'Flowers', gestureDetails: '',
+            timestamp: new Date().toISOString()
+        };
+
+        const isYes = data.answer === 'yes';
+        const card = document.getElementById('main-card');
+
+        // ——— Format timestamp ———
+        function formatDate(iso) {
+            try {
+                const d = new Date(iso);
+                return d.toLocaleString('en-GB', { dateStyle: 'long', timeStyle: 'short' });
+            } catch { return ''; }
+        }
+
+        // ——— Build YES state ———
+        function buildYes() {
+            card.innerHTML = `
+        <span class="big-emoji">🎉</span>
+        <h1 class="celebrate-title glow">She Said YES!!!</h1>
+        <p class="celebrate-sub">This is officially the best day of my life. 💖</p>
+
+        <div class="memory-strip">
+          <div class="memory-box">🌹</div>
+          <div class="memory-box">💕</div>
+          <div class="memory-box">✨</div>
+          <div class="memory-box">🥂</div>
+          <div class="memory-box">🌸</div>
+        </div>
+
+        <div class="divider">💝</div>
+
+        <div class="answer-display">
+          <div class="answer-row">
+            <span class="answer-label">From</span>
+            <span class="answer-value" style="font-weight:700; color:var(--blush);">${escHtml(data.name || 'You ❤️')}</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-label">Answer</span>
+            <span class="answer-value big-answer">Yes, I will! 💕</span>
+          </div>
+          ${data.moods ? `<div class="answer-row">
+            <span class="answer-label">Feeling</span>
+            <span class="answer-value">${escHtml(data.moods)}</span>
+          </div>` : ''}
+          ${data.word ? `<div class="answer-row">
+            <span class="answer-label">In one word</span>
+            <span class="answer-value gold-glow" style="font-family:'Dancing Script',cursive; font-size:1.3rem;">"${escHtml(data.word)}"</span>
+          </div>` : ''}
+          ${data.song ? `<div class="answer-row">
+            <span class="answer-label">🎵 Song</span>
+            <span class="answer-value">${escHtml(data.song)}</span>
+          </div>` : ''}
+          ${data.gesture ? `<div class="answer-row">
+            <span class="answer-label">🎁 Gesture</span>
+            <span class="answer-value" style="color:var(--gold-light); font-weight:700;">
+                ${escHtml(data.gesture)}${data.gestureDetails ? ` (${escHtml(data.gestureDetails)})` : ''}
+            </span>
+          </div>` : ''}
+          ${data.reasons ? `<div>
+            <span class="answer-label">Her words</span>
+            <p class="answer-value reasons">"${escHtml(data.reasons)}"</p>
+          </div>` : ''}
+        </div>
+
+        <div class="final-note">
+          Chapter one begins today. Let's make it a beautiful story. 🌹
+        </div>
+
+        <p class="timestamp">Answered on ${formatDate(data.timestamp)}</p>
+
+        <div class="action-row">
+          <button class="btn btn-gold" onclick="saveMemory()">💾 Save This Moment</button>
+          <a href="index.html" class="btn btn-secondary">🔄 Start Over</a>
+        </div>
+
+        <div class="nav-dots" style="margin-top:2rem;">
+          <span></span><span></span><span></span><span></span>
+          <span class="active"></span>
+        </div>
+      `;
+        }
+
+        // ——— Build NO state ———
+        function buildNo() {
+            document.querySelector('.bg-gradient').style.background =
+                'radial-gradient(ellipse at 20% 40%, #1a2040 0%, #0d0e1a 50%, #050608 100%)';
+            card.innerHTML = `
+        <span class="big-emoji">💙</span>
+        <h1 class="celebrate-title" style="background:linear-gradient(135deg,#93c5fd,#c4b5fd); -webkit-background-clip:text; background-clip:text;">
+          Thank You for Being Honest
+        </h1>
+        <p class="celebrate-sub" style="color:#c4b5fd;">Your honesty is something I truly respect.</p>
+
+        <div class="divider">🌿</div>
+
+        <div class="answer-display" style="border-color:rgba(147,197,253,0.2);">
+          <div class="answer-row">
+            <span class="answer-label">From</span>
+            <span class="answer-value" style="color:#93c5fd;">${escHtml(data.name || 'You')}</span>
+          </div>
+          ${data.moods ? `<div class="answer-row">
+            <span class="answer-label">Feeling</span>
+            <span class="answer-value">${escHtml(data.moods)}</span>
+          </div>` : ''}
+          ${data.word ? `<div class="answer-row">
+            <span class="answer-label">In one word</span>
+            <span class="answer-value" style="font-family:'Dancing Script',cursive;font-size:1.3rem;color:#c4b5fd;">"${escHtml(data.word)}"</span>
+          </div>` : ''}
+          ${data.reasons ? `<div>
+            <span class="answer-label">Your words</span>
+            <p class="answer-value reasons" style="border-color:rgba(147,197,253,0.15);">"${escHtml(data.reasons)}"</p>
+          </div>` : ''}
+        </div>
+
+        <p style="text-align:center; color:#93c5fd; font-family:'Dancing Script',cursive; font-size:1.05rem; opacity:0.8;">
+          Whatever this means for us — I'm grateful I got to know you. 🌙
+        </p>
+
+        <div class="action-row">
+          <a href="index.html" class="btn btn-secondary">🔄 Go Back</a>
+        </div>
+
+        <div class="nav-dots" style="margin-top:2rem;">
+          <span></span><span></span><span></span><span></span>
+          <span class="active"></span>
+        </div>
+      `;
+        }
+
+        function escHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // ——— Build page ———
+        if (isYes) buildYes(); else buildNo();
+
+        // ——— Confetti ———
+        if (isYes) {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
+            const COLORS = ['#f43f5e', '#fb7185', '#fda4af', '#fde68a', '#f59e0b', '#a78bfa', '#c084fc', '#34d399'];
+            const pieces = Array.from({ length: 140 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                w: 6 + Math.random() * 10,
+                h: 4 + Math.random() * 7,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                rotation: Math.random() * Math.PI * 2,
+                spin: (Math.random() - 0.5) * 0.2,
+                vy: 1.5 + Math.random() * 2.5,
+                vx: (Math.random() - 0.5) * 1.5,
+                wobble: Math.random() * Math.PI * 2,
+            }));
+
+            function drawConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = 0.85;
+                    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                    ctx.restore();
+
+                    p.y += p.vy;
+                    p.x += p.vx + Math.sin(p.wobble) * 0.5;
+                    p.wobble += 0.05;
+                    p.rotation += p.spin;
+
+                    if (p.y > canvas.height + 20) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+                requestAnimationFrame(drawConfetti);
+            }
+            drawConfetti();
+
+            // Fireworks
+            function launchFirework() {
+                const el = document.createElement('div');
+                el.className = 'firework';
+                const size = 20 + Math.random() * 40;
+                el.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${Math.random() * 100}vw; top:${Math.random() * 70}vh;
+          background:radial-gradient(circle, ${COLORS[Math.floor(Math.random() * COLORS.length)]}, transparent);
+        `;
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 900);
+            }
+            setInterval(launchFirework, 400);
+        }
+
+        // ——— Save moment (print) ———
+        function saveMemory() {
+            window.print();
+        }
+    </script>
+</body>
+
+</html>

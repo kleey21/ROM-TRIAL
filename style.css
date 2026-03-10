@@ -1,0 +1,270 @@
+/* =========================================
+   GIRLFRIEND PROPOSAL — Global Styles
+   ========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Lato:wght@300;400;700&family=Dancing+Script:wght@400;700&display=swap');
+
+/* ——— CSS Variables ——— */
+:root {
+  --rose:       #f43f5e;
+  --rose-light: #fb7185;
+  --rose-dark:  #be123c;
+  --blush:      #fda4af;
+  --cream:      #fff1f2;
+  --gold:       #f59e0b;
+  --gold-light: #fde68a;
+  --deep:       #1a0a10;
+  --wine:       #4c0519;
+  --text-light: #fce7f3;
+  --text-muted: #fbcfe8;
+  --glass-bg:   rgba(255, 241, 242, 0.08);
+  --glass-border: rgba(253, 164, 175, 0.25);
+}
+
+/* ——— Reset & Base ——— */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--deep);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ——— Typography ——— */
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+.script {
+  font-family: 'Dancing Script', cursive;
+}
+
+/* ——— Animated Background ——— */
+.bg-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: radial-gradient(ellipse at 20% 40%, #4c0519 0%, #1a0a10 50%, #0d0508 100%);
+  animation: bg-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes bg-pulse {
+  0%   { filter: brightness(1); }
+  100% { filter: brightness(1.15); }
+}
+
+/* ——— Particle Canvas ——— */
+#particle-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ——— Page Wrapper ——— */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+}
+
+/* ——— Glass Card ——— */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 2rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 3rem 3.5rem;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 8px 64px rgba(244, 63, 94, 0.12), 0 2px 16px rgba(0,0,0,0.4);
+  animation: float-card 6s ease-in-out infinite;
+}
+
+@keyframes float-card {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* ——— Nav Dots ——— */
+.nav-dots {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.nav-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(253, 164, 175, 0.35);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-dots span.active {
+  background: var(--rose-light);
+  transform: scale(1.35);
+}
+
+/* ——— Buttons ——— */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 2.4rem;
+  border-radius: 50px;
+  border: none;
+  font-size: 1rem;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(244, 63, 94, 0.45);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 36px rgba(244, 63, 94, 0.6);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--glass-border);
+}
+
+.btn-secondary:hover {
+  background: var(--glass-bg);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), #d97706);
+  color: var(--deep);
+  box-shadow: 0 4px 24px rgba(245, 158, 11, 0.4);
+}
+
+.btn-gold:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 36px rgba(245, 158, 11, 0.6);
+}
+
+/* ——— Floating Hearts ——— */
+.hearts-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.floating-heart {
+  position: absolute;
+  bottom: -80px;
+  font-size: 1.4rem;
+  animation: rise-heart linear infinite;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px rgba(244, 63, 94, 0.6));
+}
+
+@keyframes rise-heart {
+  0%   { transform: translateY(0) rotate(0deg) scale(1);   opacity: 0; }
+  10%  { opacity: 0.9; }
+  80%  { opacity: 0.4; }
+  100% { transform: translateY(-110vh) rotate(40deg) scale(0.5); opacity: 0; }
+}
+
+/* ——— Sparkle ——— */
+.sparkle {
+  position: absolute;
+  pointer-events: none;
+  animation: sparkle-pop 0.6s ease-out forwards;
+  font-size: 1.2rem;
+}
+
+@keyframes sparkle-pop {
+  0%   { transform: scale(0) rotate(0deg);   opacity: 1; }
+  60%  { transform: scale(1.4) rotate(180deg); opacity: 0.9; }
+  100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+/* ——— Page Transition ——— */
+.fade-in {
+  animation: fade-in 0.8s ease forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ——— Glow Text ——— */
+.glow {
+  text-shadow: 0 0 20px rgba(244, 63, 94, 0.7), 0 0 60px rgba(244, 63, 94, 0.3);
+}
+
+.gold-glow {
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.8), 0 0 50px rgba(245, 158, 11, 0.3);
+}
+
+/* ——— Divider ——— */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: var(--blush);
+  opacity: 0.5;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blush), transparent);
+}
+
+/* ——— Scroll indicator ——— */
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  opacity: 0.5;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
+}
+
+/* ——— Responsive ——— */
+@media (max-width: 600px) {
+  .glass-card {
+    padding: 2rem 1.5rem;
+    border-radius: 1.4rem;
+  }
+}
